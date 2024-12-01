@@ -1,0 +1,53 @@
+<html>
+<%- include('./partials/head.ejs') %>
+<body>
+<%- include('./partials/nav.ejs') %>
+<% if (success && success.length > 0)
+{ %>
+    <div class="alert alert-success"><%= success %></div>
+<% } %>
+<% if (error && error.length > 0) { %>
+    <div class="alert alert-danger"><%= error %></div>
+<% } %>
+
+<div class="container py-5">
+    <h1 class="text-center">Available Courses</h1>
+    <% if (courses.length > 0) { %>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Course Name</th>
+                <th>Code</th>
+                <th>Description</th>
+                <th>Credits</th>
+                <th>Instructor</th>
+                <th>Enrolled Students</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% courses.forEach(course => { %>
+                <tr>
+                    <td><%= course.name %></td>
+                    <td><%= course.code %></td>
+                    <td><%= course.description %></td>
+                    <td class="text-center"><%= course.credits %></td>
+                    <td>
+                        <% if (course.faculty) { %>
+                            <%= course.faculty.firstName + ' ' + course.faculty.lastName %>
+                        <% } else { %>
+                            <span class="text-muted">Unassigned</span>
+                        <% } %>
+                    </td>
+                    <td class="text-center"><%= course.enrollmentCount || 0 %></td>
+                </tr>
+            <% }) %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p class="text-center">No Courses Available</p>
+    <% } %>
+</div>
+
+<%- include('./partials/footer.ejs') %>
+</body>
+</html>

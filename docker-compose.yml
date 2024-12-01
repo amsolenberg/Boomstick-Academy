@@ -1,0 +1,43 @@
+services:
+  app:
+    container_name: boomstick-academy-app
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SESSION_SECRET: ${SESSION_SECRET}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+    volumes:
+      - .:/usr/src/app
+    networks:
+      - boom_net
+    ports:
+      - ${APP_3000:-3000}:3000
+    depends_on:
+      - db
+
+  db:
+    container_name: boomstick-academy-db
+    image: mongo:${MONGO_VERSION:-latest}
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASS}
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - boom_net
+    ports:
+      - ${MONGO_27017:-27017}:27017
+
+networks:
+  boom_net:
+    driver: bridge
+
+volumes:
+  mongo-data:
